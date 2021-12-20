@@ -6,6 +6,8 @@
 #include <assert.h>
 
 
+static const double eps = 1e-10;
+
 struct Vec3D
 {
 	double x = 0;
@@ -13,10 +15,16 @@ struct Vec3D
 	double z = 0;
 
 	Vec3D(double x = 0, double y = 0, double z = 0)
+		: x(x)
+		, y(y)
+		, z(z)
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
+
+	}
+
+	bool isZero(double value) const
+	{
+		return std::abs(value) <= eps;
 	}
 
 	double dot(const Vec3D& other) const
@@ -37,7 +45,10 @@ struct Vec3D
 	{
 		const double vecLength = length();
 
-		assert(vecLength != 0);
+		if (isZero(vecLength))
+		{
+			return Vec3D();
+		}
 
 		const Vec3D unitVec = Vec3D(x / vecLength, y / vecLength, z / vecLength);
 
